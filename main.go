@@ -51,6 +51,6 @@ func newServer(id int64) *server {
 	return &server{
 		ID:          id,
 		log:         make([]logEntry, 0),
-		serverClock: LamportClock.GetClock(0),
+		serverClock: LamportClock.GetClock(0, 0),
 	}
 }
