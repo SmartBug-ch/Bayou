@@ -1,6 +1,9 @@
 package main
 
-import "sync"
+import (
+	"Bayou/LamportClock"
+	"sync"
+)
 
 // in Bayou we just have writes
 // here we have the base for a Write to identify its herkunft und timestamp
@@ -27,10 +30,10 @@ type logEntry struct {
 // we need a lamportclock implementation to use in a server for the timestamp in the writeStamp
 // TODO implement a lamport clock to use in each server
 type server struct {
-	ID         int64
-	log        []logEntry
-	serverLock sync.Mutex
-	//serverClock laportClock
+	ID          int64
+	log         []logEntry
+	serverLock  sync.Mutex
+	serverClock *LamportClock.Clock
 }
 
 func newWrite(serv server, op string) write {
@@ -46,7 +49,8 @@ func newWrite(serv server, op string) write {
 
 func newServer(id int64) *server {
 	return &server{
-		ID:  id,
-		log: make([]logEntry, 0),
+		ID:          id,
+		log:         make([]logEntry, 0),
+		serverClock: LamportClock.GetClock(0),
 	}
 }
